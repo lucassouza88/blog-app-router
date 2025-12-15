@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import type { Metadata, PageProps } from "next"
+import type { Metadata } from "next"
 import { getArtigoBySlug, getArtigos } from "@/lib/artigos"
 
 export async function generateStaticParams() {
@@ -11,15 +11,13 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  props: PageProps
+  { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
-  const { slug } = await props.params
+  const { slug } = await params
   const artigo = await getArtigoBySlug(slug)
 
   if (!artigo) {
-    return {
-      title: "Artigo não encontrado"
-    }
+    return { title: "Artigo não encontrado" }
   }
 
   return {
@@ -29,9 +27,9 @@ export async function generateMetadata(
 }
 
 export default async function ArtigoPage(
-  props: PageProps
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = await props.params
+  const { slug } = await params
   const artigo = await getArtigoBySlug(slug)
 
   if (!artigo) return notFound()
@@ -39,7 +37,6 @@ export default async function ArtigoPage(
   return (
     <main style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
       <h1>{artigo.titulo}</h1>
-
       <p>
         <strong>{artigo.autor}</strong> — {artigo.data}
       </p>
