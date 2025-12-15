@@ -1,11 +1,40 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { getArtigoBySlug } from "@/lib/artigos"
+import { getArtigoBySlug, getArtigos } from "@/lib/artigos"
+import type { Metadata } from "next"
 
+/* Geração estática */
+export async function generateStaticParams() {
+  const artigos = await getArtigos()
+
+  return artigos.map((artigo) => ({
+    slug: artigo.slug
+  }))
+}
+
+/* Metadata dinâmica (Next 15) */
+export async function generateMetadata(
+  props: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
+  const { slug } = await props.params
+  const artigo = await getArtigoBySlug(slug)
+
+  if (!artigo) {
+    return { title: "Artigo não encontrado" }
+  }
+
+  return {
+    title: artigo.titulo,
+    description: artigo.resumo
+  }
+}
+
+/* Página */
 export default async function ArtigoPage(
-  { params }: { params: { slug: string } }
+  props: { params: Promise<{ slug: string }> }
 ) {
-  const artigo = await getArtigoBySlug(params.slug)
+  const { slug } = await props.params
+  const artigo = await getArtigoBySlug(slug)
 
   if (!artigo) {
     return notFound()
@@ -19,7 +48,9 @@ export default async function ArtigoPage(
         {artigo.autor} • {artigo.data}
       </p>
 
-      <p>{artigo.conteudo}</p>
+      <article style={{ marginTop: "1.5rem" }}>
+        {artigo.conteudo}
+      </article>
 
       <Link href="/" className="link">
         ← Voltar para a página inicial
