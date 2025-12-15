@@ -14,8 +14,11 @@ export default async function HomePage() {
         {artigos.map((artigo) => (
           <div key={artigo.slug} className="card">
             <h3>{artigo.titulo}</h3>
-            <p>{artigo.autor} • {artigo.data}</p>
-            <p>{artigo.descricao}</p>
+            <p>
+              {artigo.autor} • {artigo.data}
+            </p>
+
+            <p>{artigo.resumo}</p>
 
             <Link className="link" href={`/artigos/${artigo.slug}`}>
               Ler artigo →
