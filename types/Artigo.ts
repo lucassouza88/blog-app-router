@@ -1,8 +1,8 @@
-export interface Artigo {
-  titulo: string
+export type Artigo = {
   slug: string
+  titulo: string
   autor: string
   data: string
-  descricao: string
+  resumo: string
   conteudo: string
 }

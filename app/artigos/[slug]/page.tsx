@@ -1,44 +1,53 @@
-import Link from "next/link"
-import { getArtigos, getArtigoBySlug } from "@/lib/artigos"
 import { notFound } from "next/navigation"
-
-export const dynamic = "force-static"
+import { getArtigoBySlug, getArtigos } from "@/lib/artigos"
+import type { Metadata } from "next"
 
 export async function generateStaticParams() {
   const artigos = await getArtigos()
-  return artigos.map((artigo) => ({ slug: artigo.slug }))
+
+  return artigos.map((artigo) => ({
+    slug: artigo.slug
+  }))
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata> {
   const artigo = await getArtigoBySlug(params.slug)
-  if (!artigo) return {}
+
+  if (!artigo) {
+    return {
+      title: "Artigo não encontrado"
+    }
+  }
 
   return {
     title: artigo.titulo,
-    description: artigo.descricao,
+    description: artigo.resumo
   }
 }
 
-export default async function ArtigoPage({
-  params,
-}: {
-  params: { slug: string }
-}) {
+export default async function ArtigoPage(
+  { params }: { params: { slug: string } }
+) {
   const artigo = await getArtigoBySlug(params.slug)
+
   if (!artigo) return notFound()
 
   return (
-    <main className="container">
-      {/* 🔙 LINK DE VOLTAR */}
-      <Link href="/" className="link">
-        ← Voltar para a página inicial
-      </Link>
+    <main style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
+      <h1>{artigo.titulo}</h1>
+      <p>
+        <strong>{artigo.autor}</strong> — {artigo.data}
+      </p>
 
-      <article className="article" style={{ marginTop: "1.5rem" }}>
-        <h1>{artigo.titulo}</h1>
-        <p>{artigo.autor} • {artigo.data}</p>
-        <p>{artigo.conteudo}</p>
+      <article style={{ marginTop: "1.5rem" }}>
+        {artigo.conteudo}
       </article>
+
+      <a href="/" style={{ display: "inline-block", marginTop: "2rem" }}>
+        ← Voltar para Home
+      </a>
     </main>
   )
 }

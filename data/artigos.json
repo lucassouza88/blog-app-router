@@ -4,7 +4,7 @@
     "slug": "introducao-nextjs-15",
     "autor": "Lucas Souza",
     "data": "2025-01-10",
-    "descricao": "Conheça as principais novidades do Next.js 15.",
+    "resumo": "Este é um resumo do primeiro artigo para Next.js 15.",
     "conteudo": "O Next.js 15 melhora o App Router, Server Components e SEO."
   },
   {
@@ -12,7 +12,7 @@
     "slug": "app-router-na-pratica",
     "autor": "Lucas Souza",
     "data": "2025-01-15",
-    "descricao": "Aprenda a usar o App Router corretamente.",
+    "resumo": "Este é um resumo do primeiro artigo para SEO.",
     "conteudo": "Com o App Router criamos rotas dinâmicas e SEO moderno."
   }
 ]
